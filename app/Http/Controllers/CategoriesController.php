@@ -4,77 +4,68 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $categories = Categories::latest()->get();
         return view('categories.index', ['categories' => $categories]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        return view('categories.create');
+        $categories = Categories::latest()->get();
+
+        return view('categories.create', compact('categories') );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //dd($request->name);
-        Categories::create([
-            'name'=>$request['name'],
-            'slug'=>$request['name']
-        ]); 
-        return back();
+        $rules = [
+            'name'=> ['required', 'min:3', 'max:160'],
+       
+        ];
+        $this->validate($request, $rules);
+        $input = $request->all();
+        $input['slug'] =Str::slug($request->name);
+
+        //image upload
+        if($file = $request->file('featured_image')){
+            $name = uniqid() . $file->getClientOriginalName();
+            $name = strtolower(str_replace(' ', '-', $name));
+            $file->move('images/featured_image/', $name);
+            $input['featured_image'] = $name;
+        }
+         $categories = Categories::create($input);
+   
+        return redirect('/');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($slug)
+
+
+
+
+
+
+    public function show($id)
     {
-        $categories = Categories::where('slug', $slug)->first();
+        $categories = Categories::where('id', $id)->first();
         return view('categories.show', compact('categories'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $categories = Categories::findOrFail($id);
         return view('categories.edit', compact('categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         $categories = Categories::findOrFail($id);
@@ -84,16 +75,12 @@ class CategoriesController extends Controller
         return redirect('categories');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         $categories = Categories::findOrFail($id);
         $categories->delete();
         return redirect('categories');
     }
+
 }

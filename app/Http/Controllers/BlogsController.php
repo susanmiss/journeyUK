@@ -36,8 +36,8 @@ class BlogsController extends Controller
     }
 
     public function create(){
-        $categories = Categories::latest()->get();
-        return view('blogs.create', compact('categories'));
+   
+        return view('blogs.create');
     }
 
     public function store(Request $request){
@@ -79,11 +79,7 @@ class BlogsController extends Controller
             $blogByUser->category()->sync($request->category_id);
         }
 
-        //mail
-        // $users = User::all();
-        // foreach($users as $user){
-        //     Mail::to($user->email)->queue(new BlogPublished($blogByUser, $user));
-        // }
+     
 
         Session::flash('blog_created_message', 'Congratulations on creating a great blog!');
 
@@ -122,7 +118,7 @@ class BlogsController extends Controller
                 unlink('images/featured_image/' . $blog->featured_image);
             }
             $name = uniqid() . $file->getClientOriginalName();
-            $name = strtolower(str_replace(' ', '-', $name));
+            $name = strtolower(Str::replace(' ', '-', $name));
             $file->move('images/featured_image/', $name);
             $input['featured_image'] = $name;
 

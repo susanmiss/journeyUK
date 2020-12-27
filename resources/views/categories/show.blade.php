@@ -5,13 +5,26 @@
 
 
 <div class="container-fluid">
-    <div class="jumbotron">
-        <h2>{{ $categories->name }}</h2>
+
+
+
+
+        <h2>
+          
+            {{ $categories->name }}
+        
+         <h2>
+
+         <img src="/images/featured_image/{{ $categories->featured_image ? $categories->featured_image : '' }}" alt="{{$categories->name }}" class="img-responsive featured_image">
+       
+
+
 
             <div class="btn-group">
                 <a href="{{ route('categories.edit', $categories->id) }}" class=" btn btn-warning btn-sm btn-margin-right">
             Edit Category
                 </a>
+
 
                 <form action="{{ route('categories.destroy', $categories->id) }}" method="post">
                 {{method_field('delete')}}
@@ -25,12 +38,7 @@
     </div>
 
 
-    <div class="col-md-12">
-        @foreach($categories->blog as $blog)
-            <h3><a href="{{ route('blogs.show', $blog->id) }}">{{$blog->title}}</a></h3>
-        @endforeach
-    </div>
-    
+
 
 </div>
 
