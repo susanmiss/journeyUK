@@ -16,7 +16,7 @@
             </h1>  
 
             @if(Auth::user())
-            @if(Auth::user()->role_id ===1 || Auth::user()->role_id === 2 && Auth::user()->id === $blog->user_id)
+            
 
             <div class="col-md-12">
             <div class="btn-group">
@@ -33,7 +33,7 @@
 
         </div>
 
-        @endif
+       
         @endif
 
         <div class="col-md-12">

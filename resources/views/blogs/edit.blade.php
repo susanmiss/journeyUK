@@ -21,12 +21,9 @@
             </div>
 
             <div class="form-group form-check form-check-inline">
-                {{  $blog->category->count() ? 'Current Categories: ' : ' ' }} &nbsp;
+           
             
-                @foreach($blog->category as $category)
-                    <input type="checkbox" value="{{ $category->id }}" name="category_id[]" class="form-check-input" >
-                    <label class="form-check-label mr-3">{{$category->name}}</label>
-                @endforeach
+              
             </div> 
 
             <div class="form-group">

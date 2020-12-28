@@ -9,7 +9,7 @@ class AdminController extends Controller
 {
     // other way of using middleware:
     public function __construct(){
-        $this->middleware(['auth', 'admin'], ['only' =>['blogs'] ]);
+        $this->middleware(['auth'], ['only' =>['blogs'] ]);
         $this->middleware('auth');
     }
 

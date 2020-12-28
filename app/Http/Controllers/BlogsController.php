@@ -19,7 +19,7 @@ class BlogsController extends Controller
     //will excecute before others:
     public function __construct(){
         // $this->middleware('author', ['only' => ['create', 'store','edit', 'update' ]]);
-        $this->middleware('admin', ['only' => ['delete', 'trash','restore', 'permanentDelete' ]]);
+        // $this->middleware('admin', ['only' => ['delete', 'trash','restore', 'permanentDelete' ]]);
     }
 
 
@@ -105,7 +105,7 @@ class BlogsController extends Controller
                 unlink('images/featured_image/' . $blog->featured_image);
             }
             $name = uniqid() . $file->getClientOriginalName();
-            $name = strtolower(Str::replace(' ', '-', $name));
+            $name = strtolower(str_replace(' ', '-', $name));
             $file->move('images/featured_image/', $name);
             $input['featured_image'] = $name;
 
@@ -113,8 +113,8 @@ class BlogsController extends Controller
 
         $blog->update($input);
         //sync with categories:
-        if($request->category_id){
-            $blog->category()->sync($request->category_id);
+        if($request->categories_id){
+          $blog->category()->sync($request->category_id);
         }
         return redirect('blogs');
     }
