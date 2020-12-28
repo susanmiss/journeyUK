@@ -25,30 +25,17 @@ class BlogsController extends Controller
 
     public function index()
     {
-        //Display all blogs just for admin?
-        // $blogs = Blog::where('status', 1)->latest()->get();
-        //get the latests posts from the DB:
-
         $blogs = Blog::latest()->get();
-        //To get the blog with paginatios:
-        // $blogs = Blog::latest()->paginate(1);
         return view('blogs.index', compact('blogs'));
     }
 
     public function create(){
-   
-        return view('blogs.create');
+        $categories = Categories::latest()->get();
+        return view('blogs.create', compact('categories'));
     }
 
     public function store(Request $request){
-        //dd($request); //tipo console.log no browser
-        //dd($request->title);
-
-        // $blog = new Blog();
-        // $blog->title = $request->title;
-        // $blog->body = $request->body;
-        // $blog->save();
-        //OR: 
+ 
         $rules = [
             'title'=> ['required', 'min:5', 'max:160'],
             'body'=> ['required'],
@@ -72,16 +59,16 @@ class BlogsController extends Controller
             $file->move('images/featured_image/', $name);
             $input['featured_image'] = $name;
         }
-         $blog = Blog::create($input);
+        $blog = Blog::create($input);
         // $blogByUser = $request->user()->blogs()->create($input);
         //sync with cathegories:
-        if($request->category_id){
-            $blogByUser->category()->sync($request->category_id);
+        if($request->categories_id){
+            //category() is a Blog Model method:
+          $blog->category()->sync($request->categories_id);
         }
 
-     
-
-        Session::flash('blog_created_message', 'Congratulations on creating a great blog!');
+    
+        // Session::flash('blog_created_message', 'Congratulations on creating a great blog!');
 
         return redirect('/blogs');
     }
